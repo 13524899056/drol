@@ -1,7 +1,9 @@
 package com.jie;
 
+import com.jie.service.CommunityService;
 import com.jie.service.DroolsService;
 import com.jie.service.LocaleService;
+import com.jwaoo.community.model.Tags;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = App.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration
+
 public class AppTest
 {
     /**
@@ -48,5 +51,20 @@ public class AppTest
        log.info(service.getMessage("welcome", cn));
        Locale en = new Locale("en","US");
        log.info(service.getMessage("welcome",en));
+    }
+
+    @Autowired
+    private CommunityService communityService;
+
+    @Test
+    public void countTags(){
+        Tags tags = new Tags();
+        Long count = -1L;
+        try {
+            count = communityService.countTags(tags);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        log.info("tags count:"+count);
     }
 }

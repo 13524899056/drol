@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--<bean class="com.jwaoo.common.core.config.ZooKeeperPropertyPlaceholderConfigurer">-->
+        <!--&lt;!&ndash;<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />&ndash;&gt;-->
+        <!--<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_NEVER" />-->
+        <!--<property name="ignoreResourceNotFound" value="true" />-->
+        <!--<property name="locations">-->
+            <!--<list>-->
+                <!--<value>classpath*:application.properties</value>-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
+    <!-- 提供方应用信息，用于计算依赖关系 -->
+    <dubbo:application name="${dubbo.application.name}"  />
+
+    <!-- 注册中心服务地址 -->
+    <!--<dubbo:registry id="zookeeper" protocol="zookeeper" address="192.168.10.97:2181" />-->
+    <dubbo:registry id="zookeeper" protocol="zookeeper" address="${dubbo.registry.address}" />
+
+    <!-- 用dubbo协议端口 -->
+    <dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}"  threads="200"/>
+    <!--<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" serialization="kryo"  threads="5000"/>-->
+
+    <dubbo:reference interface="com.jwaoo.community.service.inf.CommunityServiceInf" id="communityServiceInfImpl" />
+
+    <dubbo:service interface="com.jie.service.inf.ComServiceInf" ref="communityService" />
+
+    <!-- 超时设置为10s -->
+    <dubbo:provider timeout="20000" retries="0"></dubbo:provider>
+    <dubbo:consumer check="false"></dubbo:consumer>
+    <!-- 扫描注解包路径，多个包用逗号分隔，不填pacakge表示扫描当前ApplicationContext中所有的类 -->
+    <dubbo:annotation package="com.jwaoo.community.service" />
+
+    <dubbo:monitor protocol="registry"/>
+
+</beans>
+
